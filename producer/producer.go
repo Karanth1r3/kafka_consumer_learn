@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
@@ -39,13 +40,8 @@ func main() {
 		} else {
 			fmt.Printf("Produced message: %d: %s\n", i, value)
 		}
+		<-deliverCh
+		time.Sleep(time.Second * 4)
 	}
-
-	e := <-deliverCh
-	fmt.Printf("%+v\n", e.String())
-
-	fmt.Printf("%+v\n", kp)
-
 	//kp.Flush(15 * 1000)
-
 }
