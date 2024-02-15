@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/Karanth1r3/kafka_learn/internal/util"
+	"github.com/Karanth1r3/kafka_learn/internal/service"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
@@ -29,7 +29,7 @@ func main() {
 	defer kp.Close()
 
 	// Wrapping producer into the app conext-based structure
-	op := util.NewOrderPlacer(kp, globalTopic)
+	op := service.NewOrderPlacer(kp, globalTopic)
 
 	// Send 1000 messages
 	for i := 0; i < 1000; i++ {

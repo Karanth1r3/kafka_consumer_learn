@@ -1,4 +1,4 @@
-package util
+package service
 
 import (
 	"fmt"
@@ -39,10 +39,10 @@ func (op *OrderPlacer) PlaceOrder(orderType string, size int) error {
 		op.deliveryCh)
 	if err != nil {
 		fmt.Printf("failed to produce message: %v\n", err)
-	} else {
-		fmt.Printf("Produced message: %s\n", payload)
 	}
 
 	<-op.deliveryCh
+	fmt.Printf("placed order on the queue: %s\n", format)
+
 	return nil
 }

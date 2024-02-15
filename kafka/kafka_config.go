@@ -1,5 +1,6 @@
 package kafkaconfig
 
+// TODO - replace with better config when the whole idea is up
 type (
 	KafkaProducerConfig struct {
 		BootstrapServers string
