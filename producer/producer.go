@@ -11,10 +11,9 @@ func main() {
 	// Producer config
 	config := &kafka.ConfigMap{
 		"bootstrap.servers": "localhost:9092",
+		"client.id":         "kafka_client",
+		"acks":              "all",
 	}
-
-	// Creating topic
-	topic := "coordinates"
 
 	//Creating producer
 	kp, err := kafka.NewProducer(config)
@@ -22,6 +21,11 @@ func main() {
 		log.Fatal(err)
 	}
 	defer kp.Close()
+
+	// Creating topic
+	topic := "coordinates"
+	deliverCh := make(chan kafka.Event, 10000)
+
 	// Writing message to the topic
 	for i := 0; i < 10; i++ {
 		value := fmt.Sprintf("message %d", i)
@@ -29,7 +33,7 @@ func main() {
 			TopicPartition: kafka.TopicPartition{Topic: &topic,
 				Partition: kafka.PartitionAny},
 			Value: ([]byte(value)),
-		}, nil)
+		}, deliverCh)
 		if err != nil {
 			fmt.Printf("failed to produce message %d: %v\n", i, err)
 		} else {
@@ -37,6 +41,11 @@ func main() {
 		}
 	}
 
-	kp.Flush(15 * 1000)
+	e := <-deliverCh
+	fmt.Printf("%+v\n", e.String())
+
+	fmt.Printf("%+v\n", kp)
+
+	//kp.Flush(15 * 1000)
 
 }
